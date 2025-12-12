@@ -41,6 +41,15 @@ ansible --version
 ```
 ansible localhost -m ping
 ```
+
+```
 sudo mkdir -p /etc/ansible
+```
+
+```
 sudo mv /home/ubuntu/ansible.cfg /etc/ansible/ansible.cfg
+```
+
+```
 ansible --version
+```
