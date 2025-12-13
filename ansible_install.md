@@ -12,6 +12,10 @@ ansible --version
 ansible localhost -m ping
 ```
 
+```
+ansible all -i inventory -m ping
+```
+
 ###
 
 Method 2 
