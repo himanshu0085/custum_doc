@@ -72,6 +72,8 @@ Task:
 
 Install Ansible on the control node or master (Ubuntu system 22.04 LTS).
 
+Make sure ansible.cfg file is available or not if not explore solution for that.
+
 Create an Ansible inventory file with the following structure:
 
 Two servers in the web group
