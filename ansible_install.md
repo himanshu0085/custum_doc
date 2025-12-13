@@ -6,6 +6,10 @@ sudo apt update
 sudo apt install -y software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible
+ansible --version
+```
+```
+ansible localhost -m ping
 ```
 
 ###
@@ -14,17 +18,8 @@ Method 2
 
 ```
 sudo apt update
-```
-
-```
 sudo apt install -y python3 python3-pip python3-venv
-```
-
-```
 pip install ansible
-```
-
-```
 ansible --version
 ```
 
