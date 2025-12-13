@@ -66,3 +66,25 @@ sudo mv /home/ubuntu/ansible.cfg /etc/ansible/ansible.cfg
 ```
 ansible --version
 ```
+
+```
+Task:
+
+Install Ansible on the control node or master (Ubuntu system 22.04 LTS).
+
+Create an Ansible inventory file with the following structure:
+
+Two servers in the web group
+
+One server in the db group
+
+Configure common SSH access details using inventory variables.
+
+Use Ansible to:
+
+Ping only the web servers
+
+Ping only the db server
+
+Verify that all reachable hosts return a pong response.
+```
