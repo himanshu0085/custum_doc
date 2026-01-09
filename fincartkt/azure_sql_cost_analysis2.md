@@ -3,7 +3,6 @@
 > **Document Type:** FinOps / Cost Analysis (Ad-hoc)  
 > **Scope:** Azure Subscription – Azure SQL Databases Only  
 > **Included Services:** Azure SQL Database (Hyperscale), Backups, LTR Storage  
-> **Exclusions:** App Services, Storage Accounts, Monitoring, CI/CD, Application Architecture  
 > **Source of Data:** Azure Cost Management – CSV Export (last ~30 days)
 
 ---
