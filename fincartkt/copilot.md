@@ -10,7 +10,6 @@ We plan to leverage the **GitHub ecosystem** by integrating:
 - **AI-Powered Development Assistance** — GitHub Copilot  
 
 This integration aims to:
-
 - Increase development speed  
 - Improve code quality  
 - Enhance overall team productivity  
@@ -73,76 +72,98 @@ This integration aims to:
 
 ## 4️⃣ Pricing (Exact & Transparent)
 
-### A) GitHub Actions (CI/CD)
+### A) GitHub Actions – Cost Details
 
-- Free for **public repositories**
-- **Private repositories** are billed based on:
-  - Workflow execution minutes
-  - Artifact and log storage
-- **Self-hosted runners** do not consume GitHub Actions minutes (no additional cost)
+GitHub Actions uses a **pay-as-you-go** model for private repositories.
 
-> GitHub Actions cost depends entirely on actual usage (number of workflows, execution time, and runner type).  
-> A detailed cost estimate can be provided after analyzing repository size and CI/CD frequency.
+#### Included Free Minutes (Per Month)
+
+| GitHub Plan | Free Minutes |
+|------------|--------------|
+| Free | 2,000 |
+| Team | 3,000 |
+| Enterprise | 50,000 |
+
+> Public repositories get **unlimited free minutes**.
+
+#### GitHub-Hosted Runner Costs (Approx.)
+
+| Runner Type | Cost per Minute |
+|------------|----------------|
+| Linux | $0.006 |
+| Windows | $0.010 |
+| macOS | Higher |
+
+#### Billing Rules
+- Billed per job per minute  
+- Parallel jobs multiply cost  
+- Minimum billing: 1 minute per job  
+
+#### Example Cost Scenarios
+
+**Low Usage**
+- 1,500 minutes/month → **$0**
+
+**Medium Usage**
+```
+5,000 total minutes
+- 3,000 free = 2,000 billable
+2,000 × $0.006 ≈ $12/month
+```
+
+**High Usage**
+```
+20,000 total minutes
+- 2,000 free = 18,000 billable
+18,000 × $0.006 ≈ $108/month
+```
+
+#### Self-Hosted Runners
+- Do not consume Actions minutes  
+- Only infrastructure cost applies  
+- Recommended for heavy pipelines  
 
 ---
 
 ### B) GitHub Copilot – Exact Cost Breakdown (Per User)
 
-GitHub Copilot pricing is **fixed per user** and does **not depend on code size or usage hours**.
+| Plan | Cost | Billing |
+|----|----|----|
+| Free | $0 | Monthly |
+| Pro | $10 | Per user / month |
+| Pro+ | $39 | Per user / month |
+| Business | $19 | Per user / month |
+| Enterprise | $39 | Per user / month |
 
-| Plan | Cost | Billing Type | Intended Usage |
-|----|----|----|----|
-| Free | $0 | Monthly | Limited trial usage |
-| Pro | $10 | Per user / month | Individual developers |
-| Pro+ | $39 | Per user / month | Power users with advanced AI models |
-| Business | $19 | Per user / month | Teams & organizations |
-| Enterprise | $39 | Per user / month | Large enterprises with governance controls |
+#### What’s Included
+- Unlimited standard code completions  
+- Copilot Chat & AI explanations  
+- IDE integration (VS Code, JetBrains, Visual Studio)  
+- Centralized billing (Business/Enterprise)  
 
-### What Is Included in the Cost
-- Unlimited standard code completions
-- AI-powered code suggestions and explanations
-- IDE integration (VS Code, JetBrains, Visual Studio, etc.)
-- Copilot Chat and contextual assistance
-- Centralized billing and access control (Business & Enterprise)
-
-> There are **no hidden or variable costs** for GitHub Copilot beyond the per-user license fee.
-
----
-
-### Cost Example (Client Scenario)
-
-**Team Size:** 5 Developers  
-**Selected Plan:** Copilot Business  
-
-- $19 × 5 users = **$95 per month**
-- Approximate daily cost = **$95 ÷ 30 ≈ $3.17/day (total)**
-
-This cost remains **fixed and predictable**, regardless of:
-- Number of commits
-- Lines of code written
-- Hours of Copilot usage
-
+#### Client Cost Example
+```
+5 developers × $19 = $95/month
+≈ $3.17/day (fixed)
+```
 
 ---
 
 ## 5️⃣ Productivity Impact
-
 - Up to 55% faster task completion  
 - Reduced boilerplate coding  
-- Faster developer onboarding  
+- Faster onboarding  
 
 ---
 
 ## 6️⃣ Accuracy & Limitations
-
-- Strong for standard coding patterns  
+- Best for standard coding patterns  
 - Human review required  
-- Accuracy improves with better prompts  
+- Improves with better prompts  
 
 ---
 
 ## 7️⃣ Risk & Compliance
-
 - Mandatory code review  
 - Security standards enforced  
 - Audit and retention policies  
@@ -166,12 +187,16 @@ This cost remains **fixed and predictable**, regardless of:
 
 **Monthly**
 - Copilot: ~$95  
-- GitHub Actions: Usage-based  
+- GitHub Actions: Variable (≈ $0–$108 depending on usage)
 
 ---
 
 ## 🔟 Conclusion
 
-GitHub Actions and GitHub Copilot together provide automation, AI productivity, predictable costs, and faster delivery.
-> Note: GitHub Copilot pricing is subscription-based and predictable, while GitHub Actions costs vary based on actual CI/CD usage.
+GitHub Actions and GitHub Copilot together provide:
+- Automated CI/CD pipelines  
+- AI-driven development productivity  
+- Predictable licensing for Copilot  
+- Controlled, optimizable CI/CD costs  
 
+> Note: Copilot costs are fixed per user, while GitHub Actions costs depend on actual workflow usage.
