@@ -1,176 +1,132 @@
-# Root Cause Analysis (RCA)
-## High Memory Utilization in Azure App Service Plan 003
+# Postmortem Report | UAT Service Interruption due to Memory Saturation | February 13, 2026
 
 ---
 
-## 1. Incident Summary
+## 1. Introduction
 
-**Incident Title:** High Memory Utilization in App Service Plan  
-**App Service Plan:** fincart-uat-linux-app-plan-003  
-**Environment:** UAT  
-**Pricing Tier:** B3 (7 GB RAM)  
-**Instance Count:** 1  
-**Apps Hosted:** 2 Applications  
-**Observed Memory Usage:** ~80–90%  
-
-**Incident Severity:** High  
-**Impact:** Potential performance degradation and risk of application downtime  
+A UAT service interruption affected critical services (LMS, MIS) due to memory saturation in the Azure App Service Plan (`fincart-uat-linux-app-plan-003`), leading to temporary service disruption and application container restart. Memory pressure triggered platform-level recycle events, resulting in temporary unavailability before automatic recovery.
 
 ---
 
-## 2. Incident Timeline
+## 2. Key Information (Metadata)
+
+| Field | Details |
+|------|---------|
+| Incident Type | Service Interruption [memory pressure / container recycle] |
+| Severity | Major |
+| Repeated Incident | No |
+| Affected Services | LMS, MIS (Azure App Service) |
+| Start Time | February 13, 2026, 11:15 AM IST (memory saturation observed) |
+| Progression | Memory utilization increased beyond safe limits → containers restarted → services temporarily unavailable → automatic recovery observed |
+| End Time | February 13, 2026, 1:45 PM IST (memory stabilized and services recovered) |
+| Incident Duration | ~2 hours 30 minutes |
+| Acknowledge Duration | 10 minutes |
+| Issue Detection | Azure Monitor Metrics |
+| Incident Lead | DevOps Team |
+| Participants | Platform Engineering Team |
+
+---
+
+## 3. Issue Summary
+
+**What Happened:**  
+Two UAT services (LMS and MIS) experienced temporary interruption due to memory saturation in the App Service Plan. High memory utilization triggered Azure platform container recycle events, temporarily stopping application processes.
+
+**Impact:**  
+Both LMS and MIS services experienced temporary service disruption during container restart. Memory working set dropped to 0 GB during recycle, confirming service interruption. Azure platform remained available.
+
+**Resolution:**  
+Azure App Service platform automatically restarted application containers, restoring service availability. Scaling App Service Plan to a higher memory tier was recommended to prevent recurrence.
+
+---
+
+## 4. Timeline
 
 | Time | Event |
 |------|------|
-| T0 | App Service Plan operating normally |
-| T1 | Deployment / increased workload |
-| T2 | Memory usage increased above 70% |
-| T3 | Memory utilization reached ~80–90% |
-| T4 | Risk threshold exceeded |
+| 10:30 AM | Memory utilization elevated (~70–85%) |
+| 11:15 AM | Memory utilization exceeded critical threshold (>85%) |
+| 12:05 PM | Memory working set dropped to 0 GB, indicating container recycle |
+| 12:06 PM | Application containers restarted automatically |
+| 1:20 PM | Peak memory utilization observed (~90%) |
+| 1:30 PM | Memory utilization began decreasing |
+| 1:45 PM | Memory stabilized (~55–65%), services fully recovered |
 
 ---
 
-## 3. Impact Analysis
+## 5. Root Cause Analysis
 
-**Affected Components:**
+**Problem:**  
+Service interruption occurred due to insufficient memory headroom in the Azure App Service Plan.
 
-- App Service Plan
-- Hosted Applications (2 apps)
-- Application performance
+**Root Cause:**  
 
-**Potential Impact:**
+App Service Plan (`fincart-uat-linux-app-plan-003`, B3 tier, 7 GB RAM) was hosting two Java-based services:
 
-- Slow application response
-- Application restarts
-- Application crashes (OutOfMemory)
-- Service degradation
+- `uat-fincart-lms-ind`
+- `uat-fincart-mis-ind`
 
----
+Both services consumed significant memory (~1.0–1.3 GB each), and App Service Plan memory utilization reached critical levels (~85–92%).
 
-## 4. Root Cause
-
-### Primary Root Cause
-
-Multiple applications hosted on a single App Service Plan with limited memory capacity (7 GB) caused high memory utilization (~80–90%).
-
-The B3 plan is insufficient for the current workload.
+Due to insufficient memory headroom, Azure App Service platform initiated container recycle events to maintain infrastructure stability. During recycle, application containers were temporarily stopped, causing memory working set to drop to 0 GB and resulting in temporary service interruption.
 
 ---
 
-### Contributing Factors
+### Three Whys Analysis
 
-#### Factor 1: Multiple Applications Sharing Same Memory Pool
+**Why did services go down?**  
+Application containers restarted, causing temporary service interruption.
 
-- Both applications use the same App Service Plan resources
-- Memory is shared across all applications
+**Why did application containers restart?**  
+Azure platform initiated recycle due to high memory utilization.
 
-#### Factor 2: Insufficient App Service Plan Tier
-
-- B3 provides only 7 GB RAM
-- Current workload requires more memory
-
-#### Factor 3: Single Instance Configuration
-
-- Only 1 instance handling all workloads
-- No load distribution
-
-#### Factor 4: Increased Application Load
-
-Possible reasons:
-
-- Recent deployments
-- Increased traffic
-- Background processes
-- Memory-heavy operations
+**Why was memory utilization high?**  
+App Service Plan (B3, 7 GB RAM) had insufficient memory capacity for combined workload of LMS and MIS Java services.
 
 ---
 
-## 5. Evidence
+## 6. Impact and Mitigation
 
-From Azure Portal Metrics:
+**Customer Impact:**  
+UAT users experienced temporary service interruption and performance degradation during container recycle. No permanent service failure occurred.
 
-- Memory utilization: ~80–90%
-- Instance count: 1
-- Pricing tier: B3
-- Apps running: 2
+**Mitigation Steps:**
 
-This confirms memory saturation risk.
-
----
-
-## 6. Root Cause Category
-
-**Category:** Infrastructure Capacity Limitation
-
-**Type:** Resource Constraint
-
-**Area:** Azure App Service Plan Memory Allocation
+- Azure platform automatically restarted affected containers
+- Services recovered automatically after restart
+- Memory utilization monitored and validated post-recovery
+- Scaling App Service Plan to higher memory tier recommended
 
 ---
 
-## 7. Immediate Remediation Taken / Recommended
+## 7. Lessons Learned
 
-### Option 1: Scale Up App Service Plan (Recommended)
+### What went well:
 
-Upgrade to:
+- Azure platform automatically recovered services after container restart
+- Monitoring metrics helped identify memory saturation
+- No manual intervention required for service recovery
 
-- P1V3 (8 GB RAM)
-OR
-- P2V3 (16 GB RAM)
+### What could improve:
 
----
-
-### Option 2: Scale Out App Service Plan
-
-Increase instance count:
-
-- From 1 → 2
+- Memory utilization monitoring should include proactive alerts
+- Capacity planning should consider memory requirements of Java-based services
+- App Service Plan should maintain sufficient memory headroom to prevent recycle events
+- Higher memory tier should be used for memory-intensive workloads
 
 ---
 
-### Option 3: Separate Applications
+## 8. Recommended Preventive Actions
 
-Move applications into separate App Service Plans to isolate memory usage.
-
----
-
-## 8. Preventive Measures
-
-### Monitoring
-
-- Configure memory alerts (>70%)
-- Enable Azure Monitor
-
-### Capacity Planning
-
-- Review memory usage weekly
-- Upgrade plan before reaching 70%
-
-### Architecture Improvement
-
-- Use dedicated plans for critical applications
-- Implement autoscaling
+- Upgrade App Service Plan from B3 to P1V3 or higher tier
+- Configure Azure Monitor alerts for memory utilization >70%
+- Implement autoscaling based on memory metrics
+- Periodically review infrastructure capacity for hosted services
 
 ---
 
-## 9. Lessons Learned
+## 9. Final Root Cause Statement
 
-- App Service Plan memory must be monitored regularly
-- Multiple applications require higher memory tiers
-- Proper capacity planning prevents performance risks
+The incident was caused by insufficient memory headroom in the Azure App Service Plan (`fincart-uat-linux-app-plan-003`, B3 tier, 7 GB RAM) hosting two Java-based services (`uat-fincart-lms-ind` and `uat-fincart-mis-ind`). Combined memory utilization reached critical levels (~85–92%), triggering Azure platform container recycle events. During the recycle process, application containers were temporarily stopped, resulting in temporary service interruption. Services recovered automatically after restart. Scaling the App Service Plan to a higher memory tier is recommended to prevent recurrence.
 
 ---
-
-## 10. Final Root Cause Statement
-
-The high memory utilization was caused by hosting multiple applications on a single B3 App Service Plan with limited memory (7 GB) and only one instance, resulting in memory saturation (~80–90%) and increased risk of performance degradation.
-
----
-
-## 11. Status
-
-**Status:** Open / Mitigation in Progress  
-**Recommended Fix:** Upgrade to P1V3 or P2V3 App Service Plan  
-
----
-
