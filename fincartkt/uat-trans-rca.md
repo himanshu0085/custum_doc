@@ -69,6 +69,9 @@ became temporarily unavailable - Container restarted automatically
 
 ------------------------------------------------------------------------
 
+<img width="1837" height="875" alt="Screenshot from 2026-02-24 11-00-14" src="https://github.com/user-attachments/assets/70671c86-01a1-46cc-8520-f29a06b2448e" />
+
+
 ## 5. Root Cause Analysis
 
 ### Problem
