@@ -1,34 +1,49 @@
-# Postmortem Report \| UAT Service Interruption -- Container Recycle & External API Failure \| February 21, 2026
+# Postmortem Report \| UAT Service Interruption -- Container Recycle & External API Failure \| February 21, 2026 (UTC)
 
 ------------------------------------------------------------------------
 
 ## 1. Introduction
 
 A UAT service interruption occurred on February 21, 2026, impacting the
-transaction processing service. The incident involved repeated container
-recycle events within Azure App Service and concurrent failures in the
-external Axis mandate API integration. The combination of
-application-level runtime exceptions and container restarts resulted in
-temporary transaction disruption before automatic recovery.
+transaction processing service (`uat-fincart-transaction-ind`).
+
+The incident involved repeated Azure App Service container recycle
+events along with application runtime failures caused by malformed
+responses from the external Axis mandate API.
+
+Temporary service instability was observed before automatic platform
+recovery.
 
 ------------------------------------------------------------------------
 
-## 2. Key Information (Metadata)  
+## 2. Key Information (Metadata)
 
-| Field | Details |
-|-------|----------|
-| Incident Type | Service Interruption [Container Recycle + External API Failure] |
-| Severity | Major |
-| Repeated Incident | Yes (Multiple recycle events observed) |
-| Affected Services | uat-fincart-transaction-ind |
-| Start Time | February 21, 2026, 18:30 IST |
-| Progression | CRON / Mandate flow triggered → Axis API returned malformed JWT → Runtime exceptions logged → Container recycle events observed → Temporary service disruption |
-| End Time | February 21, 2026, ~18:45 IST |
-| Incident Duration | ~15 minutes |
-| Acknowledge Duration | 10 minutes |
-| Issue Detection | Azure AppServiceConsoleLogs & App Service Container Events |
-| Incident Lead | Priyanshu Yadav |
-| Participants | Transaction Service Team |
+  -----------------------------------------------------------------------
+  Field                         Details
+  ----------------------------- -----------------------------------------
+  Incident Type                 Service Interruption \[Container
+                                Recycle + External API Failure\]
+
+  Severity                      Major
+
+  Repeated Incident             Yes (Multiple recycle events observed)
+
+  Affected Services             uat-fincart-transaction-ind
+
+  Start Time (UTC)              February 21, 2026, 10:34:24 UTC
+
+  End Time (UTC)                February 21, 2026, 13:44:41 UTC
+
+  Incident Duration             \~3 hours 10 minutes
+
+  Acknowledge Duration          10 minutes
+
+  Issue Detection               Azure App Service Diagnostics -- Web App
+                                Restart + AppServiceConsoleLogs
+
+  Incident Lead                 Priyanshu Yadav
+
+  Participants                  Himanshu Parashar
 
 
 ------------------------------------------------------------------------
@@ -37,65 +52,38 @@ temporary transaction disruption before automatic recovery.
 
 ### What Happened
 
-During scheduled transaction processing, the application invoked the
-external Axis mandate API. The API returned the following error:
+During transaction processing, the application invoked the external Axis
+mandate API.
+
+The API returned the following error:
 
     errorCode: 300
     Invalid serialized unsecured/JWS/JWE object: Missing part delimiters
 
-The malformed response triggered a RuntimeException within:
+This caused repeated `RuntimeException` errors in:
 
     ThirdPartyConnector.unifiedMandate()
+    MFTransactionServiceImpl
 
-During the same window, Azure App Service recorded container recycle
-events. During recycling, the application container restarted
-automatically, causing brief service interruption.
+During the same period, Azure App Service recorded multiple container
+recycle events.
 
-------------------------------------------------------------------------
-
-### Impact
-
--   Mandate / transaction processing failed temporarily\
--   Runtime exceptions observed in logs\
--   Container restarted automatically\
--   Temporary unavailability during recycle window\
--   No permanent data loss
-
-Azure infrastructure recovered automatically after container restart.
+When the container recycled: - Application process stopped - Service
+became temporarily unavailable - Container restarted automatically
 
 ------------------------------------------------------------------------
 
-### Resolution
+## 4. Timeline (UTC)
 
--   Container restarted automatically by Azure platform\
--   Service stabilized post-restart\
--   Application logs reviewed to identify malformed JWT response\
--   Infrastructure metrics validated and found stable
-
-------------------------------------------------------------------------
-
-## 4. Timeline (IST)
-
-  Time           Event
-  -------------- ------------------------------------------
-  18:29          Scheduled flow / CRON triggered
-  18:30:39       Axis API returned malformed JWT response
-  18:30:39       RuntimeException logged
-  18:30--18:31   Multiple API failures observed
-  18:34:24       Container recycle event triggered
-  18:35          Container restarted automatically
-  \~18:45        Service stabilized
-
-------------------------------------------------------------------------
-
-## 4.1 Supporting Evidence -- Container Recycle Events
-
-The following Azure App Service diagnostic snapshot confirms multiple
-container recycle events observed during the incident window (UTC time
-reference).
-
-`<img width="1509" height="888" alt="Container Recycle Events"
-src="https://github.com/user-attachments/assets/0b703fca-2eec-44da-a022-4fb1b7be2e88" />`{=html}
+  Time (UTC)     Event
+  -------------- -----------------------------------------
+  10:30--10:40   Elevated HTTP server errors observed
+  10:34:24       First container recycle event triggered
+  10:35          Container restarted automatically
+  12:39:32       Second container recycle event
+  13:19:22       Third container recycle event
+  13:44:41       Fourth container recycle event
+  Post 13:45     Service stabilized
 
 ------------------------------------------------------------------------
 
@@ -103,38 +91,46 @@ src="https://github.com/user-attachments/assets/0b703fca-2eec-44da-a022-4fb1b7be
 
 ### Problem
 
-Transaction processing was interrupted due to application runtime
-failures and container recycle events.
+Transaction processing service experienced temporary instability due to
+repeated container recycle events and runtime exceptions triggered by
+malformed external API responses.
 
 ------------------------------------------------------------------------
 
 ### Root Cause
 
 The external Axis mandate API returned a malformed JWT/JWS response
-(errorCode 300). The invalid token caused repeated RuntimeException
-errors during response parsing.
+(`errorCode 300`).
 
-These application-level failures coincided with Azure App Service
-container recycle events. During recycle, the container stopped and
-restarted automatically, leading to temporary service interruption.
+The invalid token caused repeated runtime exceptions during parsing and
+mandate processing.
 
-There was no confirmed evidence of memory saturation during this
-incident window.
+Concurrently, Azure App Service initiated container recycle events at:
+
+-   10:34:24 UTC\
+-   12:39:32 UTC\
+-   13:19:22 UTC\
+-   13:44:41 UTC
+
+During each recycle event: - The application container stopped - The
+working process restarted - Temporary service interruption occurred
+
+No confirmed evidence of memory saturation was observed during this
+window.
 
 ------------------------------------------------------------------------
 
 ### Three Whys Analysis
 
-**Why did the service go down?**\
-The container restarted, causing temporary service interruption.
+**Why did the service become unavailable?**\
+Because the container restarted during recycle events.
 
 **Why did the container restart?**\
-Azure App Service initiated recycle events during the instability
-window.
+Azure App Service initiated recycle events.
 
-**Why was instability observed?**\
-The application experienced repeated runtime failures due to malformed
-external API responses.
+**Why was instability occurring?**\
+Repeated runtime failures were triggered by malformed external API
+responses.
 
 ------------------------------------------------------------------------
 
@@ -142,45 +138,45 @@ external API responses.
 
 ### Customer Impact
 
-UAT users experienced temporary transaction failures and brief service
-unavailability. No permanent service outage or data loss occurred.
+-   Temporary mandate/transaction failures\
+-   Brief service unavailability during recycle windows\
+-   No data loss observed
 
 ------------------------------------------------------------------------
 
 ### Mitigation Steps
 
--   Container restarted automatically\
--   Logs reviewed for API failure pattern\
--   Infrastructure stability validated\
--   Monitoring continued post-recovery
+-   Azure platform automatically restarted containers\
+-   Application logs reviewed for API error pattern\
+-   Infrastructure health validated\
+-   Monitoring continued after stabilization
 
 ------------------------------------------------------------------------
 
 ## 7. Lessons Learned
 
-### What went well
+### What Went Well
 
--   Azure platform auto-recovered service\
--   Detailed logs helped isolate API error\
+-   Automatic recovery by Azure platform\
+-   Logs clearly identified external API failure\
 -   No manual restart required
 
-### What could improve
+### What Could Improve
 
--   Add defensive JWT validation before parsing\
+-   Add defensive validation for JWT before parsing\
 -   Implement retry logic for external API calls\
--   Configure alerts for repeated runtime failures\
--   Investigate detailed triggers of container recycle events
+-   Configure proactive alerts for container recycle events\
+-   Investigate detailed triggers behind recycle events
 
 ------------------------------------------------------------------------
 
 ## 8. Recommended Preventive Actions
 
--   Implement structured exception handling to prevent cascading
-    failures\
--   Add retry with exponential backoff for Axis API calls\
--   Enable proactive alerts for container recycle events\
--   Review App Service health metrics during failure window\
--   Coordinate with Axis API team regarding JWT format compliance
+-   Implement structured exception handling\
+-   Add exponential backoff retry for Axis API calls\
+-   Enable alerts for container restart events\
+-   Monitor HTTP 5xx spike thresholds\
+-   Coordinate with Axis API team regarding JWT compliance
 
 ------------------------------------------------------------------------
 
@@ -188,8 +184,10 @@ unavailability. No permanent service outage or data loss occurred.
 
 The incident was caused by repeated runtime exceptions triggered by a
 malformed JWT/JWS response returned from the external Axis mandate API.
-These application-level failures coincided with Azure App Service
-container recycle events, resulting in temporary service interruption.
-The container restarted automatically, and service stabilized without
-manual intervention. Preventive improvements in external API validation,
-retry logic, and monitoring are recommended to prevent recurrence.
+
+These failures coincided with Azure App Service container recycle events
+occurring at 10:34:24, 12:39:32, 13:19:22, and 13:44:41 UTC, resulting
+in temporary service interruptions.
+
+The Azure platform automatically restarted the containers, and the
+service stabilized without manual intervention.
