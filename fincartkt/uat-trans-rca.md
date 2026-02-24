@@ -13,41 +13,24 @@ temporary transaction disruption before automatic recovery.
 
 ------------------------------------------------------------------------
 
-## 2. Key Information (Metadata)
+## 2. Key Information (Metadata)  
 
-  -----------------------------------------------------------------------
-  Field                         Details
-  ----------------------------- -----------------------------------------
-  Incident Type                 Service Interruption \[Container
-                                Recycle + External API Failure\]
+| Field | Details |
+|-------|----------|
+| Incident Type | Service Interruption [Container Recycle + External API Failure] |
+| Severity | Major |
+| Repeated Incident | Yes (Multiple recycle events observed) |
+| Affected Services | uat-fincart-transaction-ind |
+| Start Time | February 21, 2026, 18:30 IST |
+| Progression | CRON / Mandate flow triggered → Axis API returned malformed JWT → Runtime exceptions logged → Container recycle events observed → Temporary service disruption |
+| End Time | February 21, 2026, ~18:45 IST |
+| Incident Duration | ~15 minutes |
+| Acknowledge Duration | 10 minutes |
+| Issue Detection | Azure AppServiceConsoleLogs & App Service Container Events |
+| Incident Lead | Priyanshu Yadav |
+| Participants | Transaction Service Team |
 
-  Severity                      Major
-
-  Repeated Incident             Yes (Multiple recycle events observed)
-
-  Affected Services             uat-fincart-transaction-ind
-
-  Start Time                    February 21, 2026, 18:30 IST
-
-  Progression                   CRON / Mandate flow triggered → Axis API
-                                returned malformed JWT → Runtime
-                                exceptions logged → Container recycle
-                                events observed → Temporary service
-                                disruption
-
-  End Time                      February 21, 2026, \~18:45 IST
-
-  Incident Duration             \~15 minutes
-
-  Acknowledge Duration          10 minutes
-
-  Issue Detection               Azure AppServiceConsoleLogs & App Service
-                                Container Events
-
-  Incident Lead                 Priyanshu Yadav
-
-  Participants                  Transaction Service Team
-  -----------------------------------------------------------------------
+---
 
 ------------------------------------------------------------------------
 
