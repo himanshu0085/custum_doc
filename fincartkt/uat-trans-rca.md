@@ -30,8 +30,6 @@ temporary transaction disruption before automatic recovery.
 | Incident Lead | Priyanshu Yadav |
 | Participants | Transaction Service Team |
 
----
-<img width="1509" height="888" alt="image" src="https://github.com/user-attachments/assets/0b703fca-2eec-44da-a022-4fb1b7be2e88" />
 
 ------------------------------------------------------------------------
 
@@ -45,7 +43,7 @@ external Axis mandate API. The API returned the following error:
     errorCode: 300
     Invalid serialized unsecured/JWS/JWE object: Missing part delimiters
 
-The malformed response triggered a `RuntimeException` within:
+The malformed response triggered a RuntimeException within:
 
     ThirdPartyConnector.unifiedMandate()
 
@@ -90,6 +88,17 @@ Azure infrastructure recovered automatically after container restart.
 
 ------------------------------------------------------------------------
 
+## 4.1 Supporting Evidence -- Container Recycle Events
+
+The following Azure App Service diagnostic snapshot confirms multiple
+container recycle events observed during the incident window (UTC time
+reference).
+
+`<img width="1509" height="888" alt="Container Recycle Events"
+src="https://github.com/user-attachments/assets/0b703fca-2eec-44da-a022-4fb1b7be2e88" />`{=html}
+
+------------------------------------------------------------------------
+
 ## 5. Root Cause Analysis
 
 ### Problem
@@ -102,7 +111,7 @@ failures and container recycle events.
 ### Root Cause
 
 The external Axis mandate API returned a malformed JWT/JWS response
-(`errorCode 300`). The invalid token caused repeated `RuntimeException`
+(errorCode 300). The invalid token caused repeated RuntimeException
 errors during response parsing.
 
 These application-level failures coincided with Azure App Service
