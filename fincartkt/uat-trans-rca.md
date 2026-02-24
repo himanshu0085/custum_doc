@@ -14,39 +14,21 @@ responses from the external Axis mandate API.
 Temporary service instability was observed before automatic platform
 recovery.
 
-------------------------------------------------------------------------
-
 ## 2. Key Information (Metadata)
 
-  -----------------------------------------------------------------------
-  Field                         Details
-  ----------------------------- -----------------------------------------
-  Incident Type                 Service Interruption \[Container
-                                Recycle + External API Failure\]
-
-  Severity                      Major
-
-  Repeated Incident             Yes (Multiple recycle events observed)
-
-  Affected Services             uat-fincart-transaction-ind
-
-  Start Time (UTC)              February 21, 2026, 10:34:24 UTC
-
-  End Time (UTC)                February 21, 2026, 13:44:41 UTC
-
-  Incident Duration             \~3 hours 10 minutes
-
-  Acknowledge Duration          10 minutes
-
-  Issue Detection               Azure App Service Diagnostics -- Web App
-                                Restart + AppServiceConsoleLogs
-
-  Incident Lead                 Priyanshu Yadav
-
-  Participants                  Himanshu Parashar
-
-
-------------------------------------------------------------------------
+| Field | Details |
+|-------|---------|
+| Incident Type | Service Interruption [Container Recycle + External API Failure] |
+| Severity | Major |
+| Repeated Incident | Yes (Multiple recycle events observed) |
+| Affected Services | uat-fincart-transaction-ind |
+| Start Time (UTC) | February 21, 2026, 10:34:24 UTC |
+| End Time (UTC) | February 21, 2026, 13:44:41 UTC |
+| Incident Duration | ~3 hours 10 minutes |
+| Acknowledge Duration | 10 minutes |
+| Issue Detection | Azure App Service Diagnostics – Web App Restart + AppServiceConsoleLogs |
+| Incident Lead | Priyanshu Yadav |
+| Participants | Himanshu Parashar |
 
 ## 3. Issue Summary
 
