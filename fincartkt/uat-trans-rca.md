@@ -31,6 +31,7 @@ temporary transaction disruption before automatic recovery.
 | Participants | Transaction Service Team |
 
 ---
+<img width="1509" height="888" alt="image" src="https://github.com/user-attachments/assets/0b703fca-2eec-44da-a022-4fb1b7be2e88" />
 
 ------------------------------------------------------------------------
 
