@@ -196,30 +196,24 @@ Includes:
 
 ---
 
-### 5.4 Total Enterprise Security Cost
+### 5.4 Total Enterprise Cost
 
-```
-
-Enterprise Plan:        21 USD/user/month
-Secret Protection:      19 USD/user/month
-Code Security:          30 USD/user/month
------------------------------------------
-
-Total:                  ~70 USD/user/month
-
-```
+| Component            | Cost (USD/user/month) |
+|----------------------|-----------------------|
+| Enterprise Plan      | 21                    |
+| Secret Protection    | 19                    |
+| Code Security        | 30                    |
+| **Total**            | **~70**               |
 
 ---
 
-### Example Calculation
+### Example (10 Developers)
 
-For a team of 10 developers:
-
-```
-
-10 × 70 USD = 700 USD/month
-
-```
+| Metric                | Value        |
+|----------------------|-------------|
+| Users                | 10          |
+| Cost per user/month  | 70 USD      |
+| **Total monthly cost** | **700 USD** |
 
 ---
 
