@@ -293,6 +293,3 @@ Public repositories provide full functionality without cost, while private and e
   - PR Comment (Markdown)  
 
 ---
-
-End of Document
-```
