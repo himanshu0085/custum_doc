@@ -82,6 +82,16 @@ sudo mv /home/ubuntu/ansible.cfg /etc/ansible/ansible.cfg
 ansible --version
 ```
 
+unistall
+
+```
+sudo apt remove ansible -y
+sudo apt autoremove -y
+sudo apt purge ansible -y
+rm -rf ~/.ansible
+sudo rm -rf /etc/ansible
+```
+
 ```
 Task:
 
