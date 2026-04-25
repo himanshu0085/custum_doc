@@ -15,6 +15,21 @@ ansible localhost -m ping
 ```
 ansible all -i inventory -m ping
 ```
+or one clean approach
+
+```
+sudo apt update && sudo apt upgrade -y
+sudo add-apt-repository ppa:ansible/ansible
+sudo apt update
+```
+
+```
+sudo apt install ansible -y
+ansible --version
+```
+
+
+
 
 ###
 
