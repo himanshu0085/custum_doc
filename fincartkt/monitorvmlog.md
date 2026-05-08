@@ -180,8 +180,9 @@ DiskAlertGroupMonitoring
 ## Notification Recipients
 
 | Name      | Email                                                                 |
-| --------- | --------------------------------------------------------------------- |
+| ----------| --------------------------------------------------------------------- |
 | Gaurav    | [singh.gaurav@fincart.com](mailto:singh.gaurav@fincart.com)           |
+| Kewal     | [kewal.sharma@fincart.com](mailto:kewal.sharma@fincart.com)           |
 | Himanshu  | [himanshu.parashar@opstree.com](mailto:himanshu.parashar@opstree.com) |
 | Priyanshu | [priyanshu.yadav@opstree.com](mailto:priyanshu.yadav@opstree.com)     |
 
