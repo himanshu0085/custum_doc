@@ -232,4 +232,4 @@ The implemented monitoring and retention configuration ensures:
 | Cron Automation      | Configured |
 | Journal Retention    | Configured |
 
-```
+
