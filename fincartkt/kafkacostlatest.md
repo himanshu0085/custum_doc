@@ -2,25 +2,24 @@
 
 ## Overview
 
-This document summarizes the Kafka-related cost optimization activities performed in Azure and Confluent Cloud between the last two billing cycles.
+This document summarizes the Kafka-related and infrastructure optimization activities performed between the following billing periods:
+
+* 06-Mar-2026 to 05-Apr-2026
+* 06-Apr-2026 to 05-May-2026
 
 ---
 
-# Invoice-Level Cost Comparison
+# Overall Cost Comparison
 
-| Billing Period             | Invoice Type                     | Amount       |
-| -------------------------- | -------------------------------- | ------------ |
-| 06-Feb-2026 to 05-Mar-2026 | Azure Services                   | ₹7,98,280.81 |
-| 06-Mar-2026 to 05-Apr-2026 | Azure Services                   | ₹7,60,521.35 |
-| 01-Mar-2026 to 31-Mar-2026 | Azure Marketplace & Reservations | ₹86,566.03   |
-| 01-Apr-2026 to 30-Apr-2026 | Azure Marketplace & Reservations | ₹73,538.57   |
+| Billing Period             | Total Cost |
+| -------------------------- | ---------- |
+| 06-Mar-2026 to 05-Apr-2026 | ₹763.2K    |
+| 06-Apr-2026 to 05-May-2026 | ₹691.5K    |
 
-## Billing Clarification
+## Total Cost Reduction
 
-* Azure Services invoice is calculated from 06-Mar-2026 to 05-Apr-2026.
-* Marketplace & Reservations invoice is calculated on calendar month basis.
-* The latest available billing data is up to 05-May-2026.
-* Invoice-level differences can include taxes, billing adjustments, and rounding differences.
+* ₹71,680 reduction
+* Approx 9.39% decrease
 
 ---
 
@@ -33,38 +32,62 @@ This document summarizes the Kafka-related cost optimization activities performe
 
 ---
 
-# Kafka Related Cost Impact
+# Resource Level Cost Comparison
 
-| Resource / Service                          | 06-Mar-2026 to 05-Apr-2026 Cost | 06-Apr-2026 to 05-May-2026 Cost | Difference | Observation                          |
-| ------------------------------------------- | ------------------------------- | ------------------------------- | ---------- | ------------------------------------ |
-| fincart-confluent-org-1                     | ₹18,160                         | ₹0                              | -₹18,160   | UAT Kafka cluster removed            |
-| cft_d8b0b87c_uat-fincart-confluent-org      | ₹15,480                         | ₹0                              | -₹15,480   | Kafka SaaS charges optimized/reduced |
-| fincart-uat-linux-appsvc-log-analytics-ws   | ₹2,750                          | ₹1,063                          | -₹1,687    | UAT monitoring/logging cost reduced  |
-| fincart-uat-linux-app-plan-001              | ₹3,021                          | ₹1,606                          | -₹1,415    | UAT App Service optimization         |
-| mainfincart/databases/finprod               | ₹47,800                         | ₹42,026                         | -₹5,774    | SQL Database optimization            |
-| fincart-prod-linux-app-svc-log-analytics-ws | ₹7,912                          | ₹4,895                          | -₹3,016    | Log Analytics optimization           |
-| fincartstorageind                           | ₹12,084                         | ₹10,325                         | -₹1,759    | Storage optimization                 |
-| finstage                                    | ₹10,931                         | ₹9,545                          | -₹1,386    | Stage environment optimization       |
+| Resource / Service                          | 06-Mar-2026 to 05-Apr-2026 | 06-Apr-2026 to 05-May-2026 | Difference | Observation                               |
+| ------------------------------------------- | -------------------------- | -------------------------- | ---------- | ----------------------------------------- |
+| cft_d8b0b87c_uat-fincart-confluent-org      | ₹44,509                    | ₹20,283                    | -₹24,226   | Kafka SaaS cost reduced                   |
+| fincart-confluent-org-1                     | ₹42,149                    | ₹26,611                    | -₹15,539   | UAT Kafka cost reduced after decommission |
+| mainfincart/databases/finprod               | ₹134.4K                    | ₹130.4K                    | -₹3,950    | SQL Database optimization                 |
+| fincart-stage-linux-app-plan-002            | ₹9,949                     | ₹6,808                     | -₹3,140    | Stage App Service optimization            |
+| fincart-stage-linux-app-plan-001            | ₹9,805                     | ₹6,808                     | -₹2,996    | Stage App Service optimization            |
+| fincart-prod-linux-app-svc-log-analytics-ws | ₹18,913                    | ₹17,130                    | -₹1,783    | Log Analytics optimization                |
+| fincart-uat-linux-appsvc-log-analytics-ws   | ₹8,373                     | ₹6,349                     | -₹2,024    | UAT monitoring optimization               |
+| finstage                                    | ₹30,692                    | ₹29,757                    | -₹935      | Stage environment optimization            |
+| fincart-uat-linux-app-plan-001              | ₹8,514                     | ₹6,811                     | -₹1,703    | UAT App Service optimization              |
+| stagefinca-ca24b0a48a-cdnprofile            | ₹6.39                      | ₹2,070                     | +₹2,064    | CDN usage/scaling increased               |
 
 ---
 
-# Net Optimization Summary
+# Total Identified Operational Savings
 
-| Type                                 | Amount  |
-| ------------------------------------ | ------- |
-| Total Identified Operational Savings | ₹48,677 |
+| Optimization Area              | Savings |
+| ------------------------------ | ------- |
+| Kafka SaaS Optimization        | ₹24,226 |
+| UAT Kafka Decommission         | ₹15,539 |
+| SQL Database Optimization      | ₹3,950  |
+| Stage App Service Optimization | ₹6,136  |
+| Log Analytics Optimization     | ₹1,783  |
+| UAT Monitoring Optimization    | ₹2,024  |
+| Stage Environment Optimization | ₹935    |
+| UAT App Service Optimization   | ₹1,703  |
+
+## Total Identified Savings
+
+24226+15539+3950+6136+1783+2024+935+1703=56396
+
+## Increased Cost
+
+| Resource            | Increased Cost |
+| ------------------- | -------------- |
+| CDN Profile Scaling | ₹2,064         |
+
+## Net Operational Savings
+
+56396-2064=54332
 
 ---
 
 # Key Findings
 
-1. The primary reason for the cost reduction was the removal of the UAT Kafka cluster from Confluent Cloud on 21-04-2026.
-2. Kafka Marketplace/SaaS charges were significantly reduced after optimization activities.
-3. Additional savings were achieved through SQL Database, Log Analytics, Storage, and App Service optimization.
-4. The identified operational savings from optimized resources is approximately ₹48.7K.
+1. The primary reason for the cost reduction was Kafka-related optimization and UAT Kafka decommissioning.
+2. Kafka SaaS charges reduced significantly between the two billing periods.
+3. Additional savings were achieved through SQL Database, Log Analytics, and App Service optimization.
+4. CDN profile cost increased due to additional usage/scaling activities.
+5. Total identified operational savings were approximately ₹54.3K.
 
 ---
 
 # Conclusion
 
-The Kafka optimization initiative successfully reduced Azure and Marketplace-related operational costs. The major contribution came from decommissioning the UAT Kafka environment and optimizing Kafka SaaS usage, resulting in measurable monthly savings across the infrastructure stack.
+The Kafka optimization initiative successfully reduced Azure and Marketplace-related operational costs. The major contribution came from Kafka SaaS optimization and UAT Kafka decommissioning, resulting in significant monthly savings across the infrastructure stack.
