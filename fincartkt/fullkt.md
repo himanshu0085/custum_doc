@@ -1,7 +1,5 @@
 # Fincart Azure DevOps – Environment & Architecture KT (Expanded)
 
-> **Note:** This document is intentionally **detailed and exhaustive** based strictly on the data discovered in Azure Portal so far. CI/CD details will be added later once pipeline information is shared.
-
 ---
 
 ## 1. Overall Summary
@@ -20,8 +18,6 @@ This Azure subscription hosts **multiple environments (PROD, STAGE, UAT)** for t
 * Azure Virtual Networks (VNets)
 * Private Endpoints
 * Azure Front Door / Azure CDN
-
-You currently have **Reader access**, therefore this document focuses on **understanding, mapping, and operational awareness**, not configuration changes.
 
 ---
 
@@ -445,16 +441,6 @@ Provides:
 * Strong security via VNets & Private Endpoints
 * Secrets centralized in Key Vaults
 * Traffic managed via Front Door/CDN
-
----
-
-### What Is Intentionally Pending
-
-* CI/CD pipeline details
-* App-to-DB-to-KeyVault dependency mapping
-* Monitoring & alert tuning specifics
-
-These will be added once pipeline and monitoring access is reviewed.
 
 ---
 
