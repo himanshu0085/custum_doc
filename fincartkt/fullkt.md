@@ -1,4 +1,4 @@
-# Fincart Azure DevOps – Environment & Architecture KT (Expanded)
+# Fincart DevOps – Environment & Architecture KT (Expanded)
 
 ---
 
